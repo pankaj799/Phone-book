@@ -1,0 +1,41 @@
+<h3><a href="/phonebook" class="btn btn-secondary">Create New</a>Record</h3>
+<table class="table tav=ble-striped">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Date Of Birth</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th></th>
+            <th></th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {{#each list }}
+<!--        {{#each this}}-->
+<!--            {{DOB}}-->
+<!--            {{/each}}-->
+           <tr>
+               <td>
+                   {{FullName}}
+               </td>
+               <td>
+                   {{DOB}}
+                </td>
+               <td>
+                   {{email}}
+               </td>
+               <td>
+                   {{mobile}}
+                </td>
+               <td>
+                   <a href="/phonebook/{{this._id}}" style="background-color: aqua;color: white;padding: .1rem .3rem ;border-radius: 6px; text-decoration: none">Edit</a>
+                   <a href="/phonebook/delete/{{this._id}}" onclick="return confirm('Are you sure to delete this record ?');" style="background-color: red;color: white;padding: .1rem .3rem ;border-radius: 6px; text-decoration: none">Delete</a>
+
+                </td>
+           </tr>
+        {{/each}}
+    </tbody>
+</table>

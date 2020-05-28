@@ -1,0 +1,28 @@
+<h3>{{viewTitle}}</h3>
+
+<form action="/phonebook" method="post" autocomplete="off">
+
+    <input type="hidden" name="_id" value="{{phonedata._id}}">
+
+    <div class="form-group">
+        <label>Full Name</label>
+        <input value="{{phonedata.FullName  }}" type="text" class="form-control" name="fullName" placeholder="Full Name">
+    </div>
+    <div class="form-group">
+        <label>Date Of Birth</label>
+        <input value="{{phonedata.DOB}}" type="date" class="form-control" name="DOB" placeholder="Date Of Birth">
+        {{phonedata.DOB}}
+    </div>
+    <div class="form-group col-md-6">
+        <label>E-mail</label>
+        <input value="{{phonedata.email}}" type="text" class="form-control" name="email" placeholder="E-mail ID">
+    </div>
+    <div class="form-group col-md-6">
+        <label>Phone Number </label>
+        <input value="{{phonedata.mobile}}" type="tel" class="form-control" name="tel" placeholder="Phone Number">
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-info">Submit</button>
+        <a href="/phonebook/list" class="btn btn-secondary">View All</a>
+    </div>
+</form>
