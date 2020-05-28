@@ -36,48 +36,49 @@ function insertRecord(req,res){
    });
 }
 
-function updateRecord(req, res)
-{
-   Phonebook.findOneAndUpdate({_id: req.body._id }, {...req.body} , {new: true}, (err, doc) => {
-      if(!err){
-         res.redirect('phonebook/list');
-      }
-      else{
-         if(err.name=='ValidationError')
-         {
-            handleValidationError(err, req.body);
-            res.render("phonedir/addOredit",{
-               viewTitle: 'Update Record',
-               phonedata: req.body,
+// function updateRecord(req, res)
+// {
+//    Phonebook.findOneAndUpdate({_id: req.body._id }, {...req.body} , {new: true}, (err, doc) => {
+//       if(!err){
+//          res.redirect('phonebook/list');
+//       }
+//       else{
+//          if(err.name=='ValidationError')
+//          {
+//             handleValidationError(err, req.body);
+//             res.render("phonedir/addOredit",{
+//                viewTitle: 'Update Record',
+//                phonedata: req.body,
+//
+//             });
+//          }
+//          else
+//          {
+//             console.log("Error"+ err);
+//          }
+//       }
+//    });
+// }
 
-            });
-         }
-         else
-         {
-            console.log("Error"+ err);
-         }
-      }
-   });
+function updateRecord(req, res){
+   const prodID = req.body._id;
+   const UpdateName = req.body.fullName;
+   const UpdateDOB = req.body.DOB;
+   const UpdateEmail = req.body.email;
+   const UpdateNum = req.body.tel;
+
+   Phonebook.findById(prodID)
+       .then(phoned =>{
+          phoned.FullName = UpdateName;
+          phoned.DOB = UpdateDOB;
+          phoned.email = UpdateEmail;
+          phoned.mobile = UpdateNum;
+          return phoned.save();
+       }).then(result => {
+          res.redirect('phonebook/list');
+   }).catch(err => console.log(err));
 }
 
-// function updateRecord(req, res){
-//    const prodID = req.body._id;
-//    const UpdateName = req.body.fullName;
-//    const UpdateDOB = req.body.DOB;
-//    const UpdateEmail = req.body.email;
-//    const UpdateNum = req.body.tel;
-//
-//    Phonebook.findById(prodID)
-//        .then(phoned =>{
-//           phoned.FullName = UpdateName;
-//           phoned.DOB = UpdateDOB;
-//           phoned.email = UpdateEmail;
-//           phoned.mobile = UpdateNum;
-//           return phoned.save();
-//        }).then(result => {
-//           res.redirect('phonebook/list');
-//    }).catch(err => console.log(err));
-// }
 router.get('/list',(req,res) => {
    const page= req.query.page;
    Phonebook.find()
@@ -129,29 +130,29 @@ router.get('/delete/:id', (req,res)=>{
 
 });
 
-// router.get('/autocomplete',(req,res)=>{
-//    var regex = new RegExp(req.query["term"],'i');
-//    var phonefilter = Phonebook.find({FullName: regex} , {'FullName':1}).sort({"updated_at": -1}).sort({"created_at": -1}).limit(20);
-//    phonefilter.exec(function (err,data) {
-//       console.log(data);
-//       var result= [];
-//       if(!err)
-//       {
-//          if(data && data.length && data.length>0){
-//          data.forEach(user=>{
-//             let obj={
-//                id: user._id,
-//                label: user.name
-//             };
-//             result.push(obj);
-//          });
-//       }
-//       res.jsonp(result);
-//       }
-//    });
-//    Phonebook.find((err, docs)=>{
-//
-//    });
-// });
+router.get('/autocomplete',(req,res)=>{
+   var regex = new RegExp(req.query["term"],'i');
+   var phonefilter = Phonebook.find({FullName: regex} , {'FullName':1}).sort({"updated_at": -1}).sort({"created_at": -1}).limit(20);
+   phonefilter.exec(function (err,data) {
+      console.log(data);
+      var result= [];
+      if(!err)
+      {
+         if(data && data.length && data.length>0){
+         data.forEach(user=>{
+            let obj={
+               id: user._id,
+               label: user.name
+            };
+            result.push(obj);
+         });
+      }
+      res.jsonp(result);
+      }
+   });
+   Phonebook.find((err, docs)=>{
+
+   });
+});
 
 module.exports = router;
