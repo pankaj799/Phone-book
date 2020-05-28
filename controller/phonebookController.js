@@ -3,6 +3,8 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Phonebook= mongoose.model('Phonebook');
 
+const Items_per_page=4;
+
 router.get('/',(req,res)=>{
    res.render("phonedir/addOredit",{
       viewTitle: "Phone Book"
@@ -77,18 +79,27 @@ function updateRecord(req, res)
 //    }).catch(err => console.log(err));
 // }
 router.get('/list',(req,res) => {
-   Phonebook.find((err, docs)=>{
-      if(!err)
-      {
-
-         res.render("phonedir/list",{
-            list: {...docs}
-         });
-      }else
-      {
-         console.log('Error' + err);
-      }
-   });
+   const page= req.query.page;
+   Phonebook.find()
+       .skip((page-1)*Items_per_page)
+       .limit(Items_per_page)
+       .then(docs => {
+          res.render("phonedir/list",{
+             list: {...docs}
+          });
+       });
+   // Phonebook.find((err, docs)=>{
+   //    if(!err)
+   //    {
+   //
+   //       res.render("phonedir/list",{
+   //          list: {...docs}
+   //       });
+   //    }else
+   //    {
+   //       console.log('Error' + err);
+   //    }
+   // });
 });
 
 
@@ -117,4 +128,30 @@ router.get('/delete/:id', (req,res)=>{
   });
 
 });
+
+// router.get('/autocomplete',(req,res)=>{
+//    var regex = new RegExp(req.query["term"],'i');
+//    var phonefilter = Phonebook.find({FullName: regex} , {'FullName':1}).sort({"updated_at": -1}).sort({"created_at": -1}).limit(20);
+//    phonefilter.exec(function (err,data) {
+//       console.log(data);
+//       var result= [];
+//       if(!err)
+//       {
+//          if(data && data.length && data.length>0){
+//          data.forEach(user=>{
+//             let obj={
+//                id: user._id,
+//                label: user.name
+//             };
+//             result.push(obj);
+//          });
+//       }
+//       res.jsonp(result);
+//       }
+//    });
+//    Phonebook.find((err, docs)=>{
+//
+//    });
+// });
+
 module.exports = router;
