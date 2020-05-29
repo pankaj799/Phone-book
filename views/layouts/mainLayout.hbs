@@ -10,10 +10,24 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <style>
+        @keyframes anima {
+            from{transform: translate(0px, -100px);opacity: 0;}
+            to{transform: translate(0px, 0px);
+                opacity: 1;}
+        }
+        .anim{
+            box-shadow: -1px 4px 37px 13px rgba(0,0,0,0.19);
+            animation: anima 1s;
+            padding: 3rem;
+            background: linear-gradient(to right, rgba(172, 182, 229, 0.69), rgba(134, 253, 232, 0.58));
+        }
+    </style>
 </head>
-<body class="bg-info">
+<body class="bg-info" style="  background: linear-gradient(to right, #ec008c, #fc6767);">
     <div class="row">
-        <div class="col-md-8 offset-md-3" style="background-color: white">
+        <div class="col-md-10 offset-md-1 anim" style="background-color: white; margin-top: 3rem;">
             {{{body}}}
         </div>
     </div>

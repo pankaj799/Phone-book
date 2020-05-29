@@ -86,6 +86,7 @@ router.get('/list',(req,res) => {
        .limit(Items_per_page)
        .then(docs => {
           res.render("phonedir/list",{
+             viewTitle: "Record",
              list: {...docs}
           });
        });
@@ -130,29 +131,55 @@ router.get('/delete/:id', (req,res)=>{
 
 });
 
-router.get('/autocomplete',(req,res)=>{
-   var regex = new RegExp(req.query["term"],'i');
-   var phonefilter = Phonebook.find({FullName: regex} , {'FullName':1}).sort({"updated_at": -1}).sort({"created_at": -1}).limit(20);
-   phonefilter.exec(function (err,data) {
-      console.log(data);
-      var result= [];
-      if(!err)
-      {
-         if(data && data.length && data.length>0){
-         data.forEach(user=>{
-            let obj={
-               id: user._id,
-               label: user.name
-            };
-            result.push(obj);
-         });
-      }
-      res.jsonp(result);
-      }
-   });
-   Phonebook.find((err, docs)=>{
+// router.get('/autocomplete',(req,res)=>{
+//    var regex = new RegExp(escapeRegex(req.query.Search), 'gi');
+//    // var phonefilter = Phonebook.find({FullName: regex} , {'FullName':1}).sort({"updated_at": -1}).sort({"created_at": -1}).limit(20);
+//    // phonefilter.exec(function (err,data) {
+//    //    console.log(data);
+//    //    var result= [];
+//    //    if(!err)
+//    //    {
+//    //       if(data && data.length && data.length>0){
+//    //       data.forEach(user=>{
+//    //          let obj={
+//    //             id: user._id,
+//    //             label: user.name
+//    //          };
+//    //          result.push(obj);
+//    //       });
+//    //    }
+//    //    res.jsonp(result);
+//    //    }
+//       Phonebook.find({'name':regex}, function (err, data) {
+//          if(err)
+//          {
+//             console.log(err);
+//          }
+//          else {
+//             res.render("/phonebook/searchoutput", {res : data});
+//          }
+//       })
+//
+//
+// });
+
+
+router.post('/search', (req, res) => {
+
+   var name = req.body.name;
+   var email = req.body.email;
+   var num = req.body.number;
+   Phonebook.findOne({FullName: {$regex:name},email:{$regex: email}, mobile: {$regex: num}},function (err,doc) {
+      console.log(doc);
+   }).then(docs => {
+             res.render("phonedir/searchoutput",{
+                viewTitle: "Search Result",
+                list: docs
+             });
 
    });
 });
+
+
 
 module.exports = router;

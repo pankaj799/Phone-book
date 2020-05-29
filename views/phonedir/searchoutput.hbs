@@ -1,0 +1,44 @@
+<div class="d-flex justify-content-between" style="margin-bottom: 2rem;">
+    <h3>{{viewTitle}}</h3>
+    <a href="/phonebook" class="btn btn-secondary float-left">Create New</a>
+</div>
+<form action="/phonebook/search" class="form-inline float-center d-flex justify-content-center" style="margin-bottom: 2rem;" method="post">
+    <div class="form-group">
+        <input type="text" id="Search1" class="form-control" name="name" placeholder="Name">
+        <input type="text" id="Search2" class="form-control" name="email" placeholder="Email">
+        <input type="text" id="Search3" class="form-control" name="number" placeholder="Number">
+        <input type="submit" name="Search" class="btn btn-primary">
+    </div>
+</form>
+<table class="table tav=ble-striped">
+    <thead>
+    <tr>
+        <th>Full Name</th>
+        <th>Date Of Birth</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th></th>
+        <th></th>
+        <th></th>
+
+    </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            <td>
+                {{list.FullName}}
+            </td>
+            <td>
+                {{list.DOB}}
+            </td>
+            <td>
+                {{list.email}}
+            </td>
+            <td>
+                {{list.mobile}}
+            </td>
+        </tr>
+
+    </tbody>
+</table>
