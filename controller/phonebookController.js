@@ -5,8 +5,11 @@ const Phonebook = mongoose.model('Phonebook');
 const Items_per_page = 4;
 
 router.get('/', (req, res) => {
+    if(!req.session.isLoggedin){
+        return res.redirect('/login');
+    }
     res.render("phonedir/addOredit", {
-        viewTitle: "Phone Book"
+        viewTitle: "Phone Book",
     });
 });
 router.post('/', (req, res) => {
@@ -55,6 +58,9 @@ function updateRecord(req, res) {
 }
 
 router.get('/list', (req, res) => {
+    if(!req.session.isLoggedin){
+        return res.redirect('/login');
+    }
     const page = req.query.page;
     Phonebook.find()
         .skip((page - 1) * Items_per_page)
@@ -70,6 +76,9 @@ router.get('/list', (req, res) => {
 
 
 router.get('/:id', (req, res) => {
+    if(!req.session.isLoggedin){
+        return res.redirect('/login');
+    }
     Phonebook.findById(req.params.id, (err, doc) => {
         if (!err) {
             res.render("phonedir/addOredit", {
@@ -81,6 +90,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.get('/delete/:id', (req, res) => {
+
     Phonebook.findOneAndDelete(req.param.id, (err, doc) => {
         if (!err) {
             res.redirect('/phonebook/list');

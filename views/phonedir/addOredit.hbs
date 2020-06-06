@@ -23,6 +23,7 @@
         <input value="{{phonedata.mobile}}" type="tel" class="form-control" name="tel" placeholder="Phone Number" required>
     </div>
     <div class="form-group">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
         <button type="submit" class="btn btn-info">Submit</button>
         <a href="/phonebook/list" class="btn btn-secondary">View All</a>
     </div>
