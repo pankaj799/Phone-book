@@ -38,8 +38,8 @@ const usersController= require('./controller/usersController');
 const phonebookController= require('./controller/phonebookController');
 
 app.use((req, res, next)=>{
-   res.locals.isAuthenticated = req.session.isLoggedin;
-   res.locals.csrfToken = req.csrfToken();
+       res.locals.isAuthenticated = req.session.isLoggedin;
+       res.locals.csrfToken = req.csrfToken();
    next();
 });
 app.use('/login',usersController);

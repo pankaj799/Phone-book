@@ -3,8 +3,15 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Users = require('../models/usersSchema');
 const bcrypt = require('bcryptjs');
-const passport = require('passport')
-    , LocalStrategy = require('passport-local').Strategy;
+const nodemailer = require('nodemailer');
+const sendgridTransport = require('nodemailer-sendgrid-transport');
+
+
+const transporter = nodemailer.createTransport(sendgridTransport({
+    auth:{
+        api_key: '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'
+    }
+}));
 
 
 router.get('/',(req, res)=>{
@@ -49,10 +56,10 @@ router.post('/signup', (req, res, next)=> {
 
 router.post('/', (req, res)=> {
     req.session.isLoggedin = true;
-    const email= req.body.email;
-    const firstname= req.body.firstname;
-    const lastname= req.body.lastname;
-    const passwd= req.body.passwd;
+    const email = req.body.email;
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+    const passwd = req.body.passwd;
     Users.findOne({email: email})
         .then(userDoc => {
             if (userDoc) {
@@ -69,11 +76,21 @@ router.post('/', (req, res)=> {
 
                     });
                     return users.save();
-                })    ;
+                });
         })
 
         .then(result => {
             res.redirect('../phonebook/list');
+            return transporter.sendMail({
+                to: email,
+                from: 'panku799@gmail.com',
+                subject: 'Sign Up Succeed',
+                html: '<h1>You Successfully signed up</h1>'
+            });
+
+        })
+        .catch(err => {
+            console.log(err);
         })
         .catch(err =>{
            console.log(err);
@@ -101,8 +118,8 @@ router.post('/', (req, res)=> {
 
 router.post('/logout',(req, res)=>{
     req.session.destroy((err)=>{
-        console.log(err);
-        res.redirect('/login');
+            res.redirect('/login');
+            console.log(err);
     });
 });
 

@@ -83,7 +83,8 @@ router.get('/:id', (req, res) => {
         if (!err) {
             res.render("phonedir/addOredit", {
                 viewTitle: "Update PhoneBook",
-                phonedata: doc
+                phonedata: doc,
+                csrfToken: req.csrfToken()
             });
         }
     });
