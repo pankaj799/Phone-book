@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Users = require('../models/usersSchema');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
 
@@ -81,7 +82,7 @@ router.post('/', (req, res)=> {
 
         .then(result => {
             res.redirect('../phonebook/list');
-            return transporter.sendMail({
+             transporter.sendMail({
                 to: email,
                 from: 'panku799@gmail.com',
                 subject: 'Sign Up Succeed',
@@ -121,6 +122,49 @@ router.post('/logout',(req, res)=>{
             res.redirect('/login');
             console.log(err);
     });
+});
+
+router.get('/reset',(req,res)=>{
+   res.render('Authentication/reset', {
+       path: '/reset',
+       pageTitle: 'Forgot Password?'
+   })
+});
+
+router.post('/reset',(req,res,next)=>{
+    const email =req.body.email;
+   crypto.randomBytes(32,(err, buffer)=>{
+       if(err)
+       {
+           console.log(err);
+           return res.redirect('/reset');
+       }
+       const token = buffer.toString('hex');
+       Users.findOne({email: req.body.email})
+           .then(user=> {
+               if(!user){
+                   return res.redirect('/login/reset');
+               }
+               user.resetToken = token;
+               user.resetTokenExpiration = Date.now() + 3600000;
+               return user.save();
+           })
+           .then(result => {
+               res.redirect('/login');
+               console.log(req.body.email);
+               return transporter.sendMail({
+
+                   to: email,
+                   from: 'panku799@gmail.com',
+                   subject: 'Password Reset',
+                   html: `<h1>Reset Password link</h1>
+                           <p>click Link <a href="http://localhost:3000/login/reset/${token}">Link</a></p>
+                    `
+               })
+                   .catch(err => {console.log(err)});
+           })
+           .catch(err => {console.log(err)});
+   });
 });
 
 module.exports = router;

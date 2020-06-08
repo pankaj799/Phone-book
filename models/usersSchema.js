@@ -17,7 +17,9 @@ const usersSchema = new mongoose.Schema({
     passwd: {
         type: String,
         required: true
-    }
+    },
+    resetToken: String,
+    resetTokenExpiration: Date
 });
 
 
