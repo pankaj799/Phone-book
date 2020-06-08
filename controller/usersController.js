@@ -6,11 +6,12 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const sendgridTransport = require('nodemailer-sendgrid-transport');
+const api = require('../config.js');
 
 
 const transporter = nodemailer.createTransport(sendgridTransport({
     auth:{
-        api_key: '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'
+        api_key: api.accessKeyId
     }
 }));
 
@@ -168,3 +169,4 @@ router.post('/reset',(req,res,next)=>{
 });
 
 module.exports = router;
+
