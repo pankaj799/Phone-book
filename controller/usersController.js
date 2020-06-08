@@ -168,5 +168,48 @@ router.post('/reset',(req,res,next)=>{
    });
 });
 
+router.get('/reset/:token',(req, res, next)=>{
+    const token = req.params.token;
+    Users.findOne({ resetToken: token, resetTokenExpiration: {$gt: Date.now()} })
+        .then(user => {
+            res.render('Authentication/new-Password', {
+                path: '/new-Password',
+                pageTitle: 'Password Reset',
+                userId: user._id.toString(),
+                passwordtoken: token
+            });
+        })
+        .catch(err =>{
+            console.log(err);
+        })
+
+});
+
+router.post('/reset/new-password',(req, res, next)=> {
+   const newPassword = req.body.passwd;
+   const userId = req.body.userId;
+   const passwordtoken = req.body.passwordtoken;
+   Users.findOne({
+       resetToken: passwordtoken,
+       resetTokenExpiration: {$gt : Date.now()},
+       _id: userId
+   })
+       .then(user =>{
+           resetUser= user;
+           return bcrypt.hash(newPassword, 12);
+       })
+       .then(hashPassword =>{
+           resetUser.passwd = hashPassword;
+           resetUser.resetToken = undefined;
+           resetUser.resetTokenExpiration = undefined;
+           resetUser.save();
+       })
+       .then(result =>{
+           res.redirect('/login');
+       })
+       .catch(err=> { console.log(err);})
+
+});
+
 module.exports = router;
 

@@ -6,6 +6,7 @@ const bodyparse = require('body-parser');
 const _handlebars = require('handlebars');
 const mongoose = require('mongoose');
 const csrf = require('csurf');
+const multer = require('multer');
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access');
 // const passport = require('passport')
 //     , LocalStrategy = require('passport-local').Strategy;
@@ -19,10 +20,32 @@ const store= new MongoDBStore({
     });
 const csrfProtection = csrf();
 
+const fileStorage = multer.diskStorage({
+   destination: (req, file, cb) =>{
+       cb(null, 'images');
+   },
+   filename: (req, file, cb) =>{
+       cb(null, file.filename+'-'+file.originalname);
+   }
+});
+
+const fileFilter = (req, file, cb) =>{
+  if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg')
+  {
+      cb(null, true);
+  }
+  else
+  {
+      cb(null, false);
+  }
+};
+
 app.use(bodyparse.urlencoded({
     extended : true
 }));
 app.use(bodyparse.json());
+app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
+app.use('/images',express.static(path.join(__dirname,'images')));
 app.use(
     expressSession({
     secret: 'secret',

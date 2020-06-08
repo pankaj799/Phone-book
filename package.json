@@ -21,6 +21,7 @@
     "karma-coverage-istanbul-reporter": "^3.0.2",
     "lodash": "^4.17.15",
     "mongoose": "^5.9.16",
+    "multer": "^1.4.2",
     "nodemailer": "^6.4.8",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "nodemon": "^2.0.4",
