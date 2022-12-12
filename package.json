@@ -15,7 +15,7 @@
     "connect-mongodb-session": "^2.3.2",
     "csrf": "^3.1.0",
     "csurf": "^1.11.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-handlebars": "^4.0.4",
     "express-session": "^1.17.1",
     "karma-coverage-istanbul-reporter": "^3.0.2",
